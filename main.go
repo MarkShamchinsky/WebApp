@@ -20,37 +20,34 @@ func main() {
 	}
 
 	router = gin.Default()
-	router.LoadHTMLGlob("html/*.html")
+	router.Static("/assets/", "front/")
+	router.LoadHTMLGlob("templates/*.html")
 	router.GET("/", HandlerIndex)
-
+	router.POST("/user/reg", HandlerUserRegistration)
 	_ = router.Run("127.0.0.1:8080")
 }
 
 func HandlerIndex(c *gin.Context) {
+	c.HTML(200, "index.html", gin.H{})
+}
 
-	rows, e := connection.Query(`SELECT "Name" FROM "User" WHERE "Login"=$1 AND "Password"=$2`, "admin", "admin")
+func HandlerUserRegistration(c *gin.Context) {
+	var user User
+	e := c.BindJSON(&user)
 	if e != nil {
-		fmt.Println(e)
-		c.HTML(400, "400.html", gin.H{
+		c.JSONP(200, gin.H{
 			"Error": e.Error(),
 		})
 		return
 	}
-
-	var name string
-
-	for rows.Next() {
-		e = rows.Scan(&name)
-		if e != nil {
-			fmt.Println(e)
-			c.HTML(400, "400.html", gin.H{
-				"Error": e.Error(),
-			})
-			return
-		}
+	e = user.Create()
+	if e != nil {
+		c.JSONP(200, gin.H{
+			"Error": "Не удалось зарегестрировать пользователя",
+		})
+		return
 	}
-
-	c.HTML(200, "index.html", gin.H{
-		"Name": name,
+	c.JSON(200, gin.H{
+		"Error": nil,
 	})
 }

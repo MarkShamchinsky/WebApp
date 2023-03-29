@@ -1,0 +1,35 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(178, 183, 187);
+}
+.form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    display: grid;
+    row-gap: 15px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 20px #eee;
+}
+
+.form > *,
+.form>* {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: 5px;
+    outline: none;
+}
+
+button:hover {
+    background-color: #ccc;
+    cursor: pointer;
+}
